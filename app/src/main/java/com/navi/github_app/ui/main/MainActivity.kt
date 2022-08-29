@@ -2,30 +2,30 @@ package com.navi.github_app.ui.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.text.Editable
+import android.widget.Button
+import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.textfield.TextInputEditText
 import com.navi.github_app.R
-import com.navi.github_app.data.api.GithubApiImpl
-import com.navi.github_app.data.model.PullRequest
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.navi.github_app.data.repository.GithubApiRepository
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        val closedPullRequestsCall = GithubApiImpl().getAllClosedPullRequests()
-        closedPullRequestsCall.enqueue(object : Callback<List<PullRequest>> {
-            override fun onResponse(
-                call: Call<List<PullRequest>>?,
-                response: Response<List<PullRequest>>?
-            ) {
-                Log.d("RESPONSE", response.toString())
-            }
-
-            override fun onFailure(call: Call<List<PullRequest>>?, t: Throwable?) {
-                Log.d("RESPONSE", call.toString())
-            }
+        setContentView(R.layout.home_screen)
+        findViewById<Button>(R.id.fetch_button).setOnClickListener({
+            val repoName = findViewById<TextInputEditText>(R.id.repo_name_input).text
+            val userName = findViewById<TextInputEditText>(R.id.user_name_input).text
+            onFetch(userName, repoName)
         })
+    }
+
+    fun onFetch(userName: Editable?, repoName: Editable?) {
+        val rvPullRequest: RecyclerView = findViewById(R.id.rv_pull_requests)
+        val noDataTv: TextView = findViewById(R.id.tv_error_when_no_user_inputs)
+        val layoutManager = LinearLayoutManager(applicationContext)
+        GithubApiRepository().getAllClosedPullRequests(rvPullRequest, layoutManager, noDataTv, userName, repoName)
     }
 }

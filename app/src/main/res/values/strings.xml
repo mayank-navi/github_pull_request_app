@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">github_app</string>
+    <string name="filter">Filter</string>
+    <string name="pull_requests">Pull Requests</string>
+    <string name="fetch">Fetch</string>
+    <string name="user_name">User name</string>
+    <string name="repository_name">Repository name</string>
 </resources>
