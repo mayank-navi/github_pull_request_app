@@ -5,15 +5,13 @@ import com.navi.github_app.data.model.PullRequest
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.Query
-import retrofit2.http.Url
+import retrofit2.http.*
 
 interface GithubService {
-    @GET
+    @GET("/repos/{owner}/{repo}/pulls")
     fun getAllClosedPullRequests(
-        @Url url: String,
+        @Path(value = "owner") owner: String,
+        @Path(value = "repo") repo: String,
         @Query("state") state: String = "closed",
         @Header("Authorization")
         token: String = Constants.GITHUB_ACCESS_TOKEN,
