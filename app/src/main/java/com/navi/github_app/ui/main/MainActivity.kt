@@ -1,21 +1,19 @@
 package com.navi.github_app.ui.main
 
-import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.widget.Button
 import android.widget.TextView
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.textfield.TextInputEditText
-import com.navi.github_app.R
 import com.navi.github_app.data.model.PullRequest
-import com.navi.github_app.data.repository.GithubApiRepository
+import com.navi.github_app.data.repository.GithubRepository
 import com.navi.github_app.databinding.HomeScreenBinding
-import com.navi.github_app.ui.HomeScreen.PullRequestAdapter
+import com.navi.github_app.ui.homescreen.adapter.PullRequestAdapter
+import com.navi.github_app.ui.homescreen.viewmodel.HomeScreenViewModel
 
 class MainActivity : AppCompatActivity() {
     private var prData = ArrayList<PullRequest>()
@@ -30,7 +28,6 @@ class MainActivity : AppCompatActivity() {
         setupUI()
     }
 
-    @SuppressLint("CutPasteId")
     private fun setupPullRequestRV() {
         val rvPullRequest: RecyclerView = binding.rvPullRequests
         val layoutManager = LinearLayoutManager(applicationContext)
@@ -50,9 +47,22 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun onFetchPress(userName: String?, repoName: String?) {
+    private fun onFetchPress(userName: String, repoName: String) {
         val noDataTv: TextView = binding.tvErrorWhenNoUserInputs
         val prRv: RecyclerView = binding.rvPullRequests
-        GithubApiRepository().getAllClosedPullRequests(prRv, noDataTv, userName, repoName)
+        val homeScreenVM = ViewModelProvider(this)[HomeScreenViewModel::class.java]
+        homeScreenVM.fetchPrData(GithubRepository(), userName, repoName);
+        homeScreenVM.prLiveData.observe(this, Observer {
+            if(!it.isError && it.data!=null){
+                prRv.adapter = PullRequestAdapter(it.data)
+                prRv.visibility = View.VISIBLE;
+                noDataTv.visibility = View.GONE
+            }
+            else{
+                prRv.visibility = View.GONE;
+                noDataTv.visibility = View.VISIBLE
+            }
+        })
+
     }
 }
