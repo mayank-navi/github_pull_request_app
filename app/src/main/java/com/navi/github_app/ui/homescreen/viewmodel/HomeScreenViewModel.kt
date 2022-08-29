@@ -12,8 +12,7 @@ import kotlin.collections.ArrayList
 
 class HomeScreenViewModel(): ViewModel() {
     val prLiveData = MutableLiveData<PullRequestResponse?>()
-
-    private var prStatus = "all"
+    var prStatus = "all"
 
     fun setStatus(status: String){
         prStatus = status
