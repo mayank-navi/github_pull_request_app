@@ -10,12 +10,12 @@ import retrofit2.http.Header
 import retrofit2.http.Query
 import retrofit2.http.Url
 
-interface GithubApiService {
+interface GithubService {
     @GET
     fun getAllClosedPullRequests(
         @Url url: String,
         @Query("state") state: String = "closed",
         @Header("Authorization")
         token: String = Constants.GITHUB_ACCESS_TOKEN,
-    ): Call<List<PullRequest>>
+    ): Call<ArrayList<PullRequest>>
 }

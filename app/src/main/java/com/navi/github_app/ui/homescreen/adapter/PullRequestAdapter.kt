@@ -1,4 +1,4 @@
-package com.navi.github_app.ui.HomeScreen
+package com.navi.github_app.ui.homescreen.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -10,17 +10,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.navi.github_app.R
 import com.navi.github_app.data.model.PullRequest
+import com.navi.github_app.databinding.HomeScreenBinding
+import com.navi.github_app.databinding.PullRequestCardBinding
 
-class PullRequestAdapter (private val prData: ArrayList<PullRequest>) :
+class PullRequestAdapter(private val prData: ArrayList<PullRequest>) :
     RecyclerView.Adapter<PullRequestAdapter.ViewHolder>(){
 
     private var context: Context? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val cardView = LayoutInflater.from(parent.context)
-            .inflate(R.layout.pull_request_card, parent, false)
+        val binding = PullRequestCardBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         context = parent.context
-        return ViewHolder(cardView)
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -41,22 +42,13 @@ class PullRequestAdapter (private val prData: ArrayList<PullRequest>) :
         return prData.size;
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val tvOwner: TextView
-        val tvStatus: TextView
-        val tvCreateAt: TextView
-        val tvClosedAt: TextView
-        val tvTitle: TextView
-        val ivAvatar: ImageView
-
-        init {
-            tvOwner = view.findViewById(R.id.card_owner_value)
-            tvStatus = view.findViewById(R.id.card_status_value)
-            tvCreateAt = view.findViewById(R.id.card_create_at_value)
-            tvClosedAt = view.findViewById(R.id.card_closed_at_value)
-            tvTitle = view.findViewById(R.id.card_title_value)
-            ivAvatar = view.findViewById(R.id.user_avatar)
-        }
+    class ViewHolder(private val binding: PullRequestCardBinding) : RecyclerView.ViewHolder(binding.root) {
+        val tvOwner: TextView = binding.cardOwnerValue
+        val tvStatus: TextView = binding.cardStatusValue
+        val tvCreateAt: TextView = binding.cardCreateAtValue
+        val tvClosedAt: TextView = binding.cardClosedAtValue
+        val tvTitle: TextView = binding.cardTitleValue
+        val ivAvatar: ImageView = binding.userAvatar
     }
 
 }
