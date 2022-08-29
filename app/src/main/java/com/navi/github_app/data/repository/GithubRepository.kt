@@ -7,10 +7,10 @@ import retrofit2.Call
 
 class GithubRepository {
     fun getAllClosedPullRequests(
-        userName: String?,
-        repoName: String?
+        userName: String,
+        repoName: String,
+        prStatus: String
     ): Call<ArrayList<PullRequest>> {
-        val url = Constants.BASE_URL + "/repos/$userName/$repoName/pulls"
-        return GithubImpl().getAllClosedPullRequests(url)
+        return GithubImpl().getAllClosedPullRequests(userName, repoName, prStatus)
     }
 }

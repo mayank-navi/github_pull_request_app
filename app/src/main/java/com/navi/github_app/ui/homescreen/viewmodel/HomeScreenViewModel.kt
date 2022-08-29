@@ -11,17 +11,22 @@ import retrofit2.Response
 import kotlin.collections.ArrayList
 
 class HomeScreenViewModel(): ViewModel() {
-    val prLiveData = MutableLiveData<PullRequestResponse>()
+    val prLiveData = MutableLiveData<PullRequestResponse?>()
+
+    private var prStatus = "all"
+
+    fun setStatus(status: String){
+        prStatus = status
+    }
 
     fun fetchPrData(githubRepository: GithubRepository, userName: String, repoName: String) {
-        val prCall : Call<ArrayList<PullRequest>> = githubRepository.getAllClosedPullRequests(userName, repoName)
+        val prCall : Call<ArrayList<PullRequest>> = githubRepository.getAllClosedPullRequests(userName, repoName, prStatus)
         prCall.enqueue(object : Callback<ArrayList<PullRequest>> {
                 override fun onResponse(call: Call<ArrayList<PullRequest>>?, response: Response<ArrayList<PullRequest>>?) {
                     if(response?.code() != 404) {
                         val prData = response?.body()
                         val prResponse = prData?.let { PullRequestResponse(false, it) }
                         prLiveData.postValue(prResponse)
-
                     }
                     else {
                         val prResponse = PullRequestResponse(true, null)
