@@ -17,32 +17,30 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class GithubApiRepository {
-    private var prData = ArrayList<PullRequest>()
-    private lateinit var prAdapter: PullRequestAdapter
-
     fun getAllClosedPullRequests(
         rvPullRequest: RecyclerView,
-        layoutManager: LinearLayoutManager,
         noDataTv: TextView,
-        userName: Editable?,
-        repoName: Editable?
+        userName: String?,
+        repoName: String?
     ): Unit {
         val url = Constants.BASE_URL + "/repos/$userName/$repoName/pulls"
         val closedPullRequestsCall = GithubApiImpl().getAllClosedPullRequests(url)
         closedPullRequestsCall.enqueue(object : Callback<List<PullRequest>> {
             override fun onResponse(call: Call<List<PullRequest>>?, response: Response<List<PullRequest>>?) {
-                if(response?.body() != null)
+                if(response?.code() != 404) {
+                    val prDataList = response?.body() as ArrayList<PullRequest>
+                    rvPullRequest.adapter = PullRequestAdapter(prDataList)
+                    rvPullRequest.visibility = View.VISIBLE;
                     noDataTv.visibility = View.GONE
-                    for(pr in response?.body()!!){
-                        prData.add(pr)
-                    }
-                    prAdapter = PullRequestAdapter(prData)
-                    rvPullRequest.layoutManager = layoutManager
-                    rvPullRequest.itemAnimator = DefaultItemAnimator()
-                    rvPullRequest.adapter = prAdapter
+                }
+                else {
+                    rvPullRequest.visibility = View.GONE;
+                    noDataTv.visibility = View.VISIBLE
+                }
             }
             override fun onFailure(call: Call<List<PullRequest>>?, t: Throwable?) {
                 noDataTv.visibility = View.VISIBLE
+                rvPullRequest.visibility = View.GONE;
                 Log.d("RESPONSE_FAILED", call.toString())
             }
         })
