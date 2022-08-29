@@ -24,16 +24,16 @@ class PullRequestAdapter (private val prData: ArrayList<PullRequest>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val pr: PullRequest = prData.get(position)
-        holder.tv_owner.text = pr.user?.name
-        holder.tv_status.text = pr.state
-        holder.tv_create_at.text = pr.createdAt?.substring(0, 10)
-        holder.tv_closed_at.text = pr.closedAt?.substring(0, 10)
-        holder.tv_title.text = pr.title
+        val pr: PullRequest = prData[position]
+        holder.tvOwner.text = pr.user?.name
+        holder.tvStatus.text = pr.state
+        holder.tvCreateAt.text = pr.createdAt?.substring(0, 10)
+        holder.tvClosedAt.text = pr.closedAt?.substring(0, 10)
+        holder.tvTitle.text = pr.title
         context?.let {
             Glide.with(context!!)
                 .load(pr.user?.avatarImageUrl)
-                .into(holder.iv_avatar)
+                .into(holder.ivAvatar)
         }
     }
 
@@ -42,19 +42,20 @@ class PullRequestAdapter (private val prData: ArrayList<PullRequest>) :
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val tv_owner: TextView
-        val tv_status: TextView
-        val tv_create_at: TextView
-        val tv_closed_at: TextView
-        val tv_title: TextView
-        val iv_avatar: ImageView
+        val tvOwner: TextView
+        val tvStatus: TextView
+        val tvCreateAt: TextView
+        val tvClosedAt: TextView
+        val tvTitle: TextView
+        val ivAvatar: ImageView
+
         init {
-            tv_owner = view.findViewById(R.id.card_owner_value)
-            tv_status = view.findViewById(R.id.card_status_value)
-            tv_create_at = view.findViewById(R.id.card_create_at_value)
-            tv_closed_at = view.findViewById(R.id.card_closed_at_value)
-            tv_title = view.findViewById(R.id.card_title_value)
-            iv_avatar = view.findViewById(R.id.user_avatar)
+            tvOwner = view.findViewById(R.id.card_owner_value)
+            tvStatus = view.findViewById(R.id.card_status_value)
+            tvCreateAt = view.findViewById(R.id.card_create_at_value)
+            tvClosedAt = view.findViewById(R.id.card_closed_at_value)
+            tvTitle = view.findViewById(R.id.card_title_value)
+            ivAvatar = view.findViewById(R.id.user_avatar)
         }
     }
 
